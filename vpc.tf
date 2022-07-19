@@ -36,12 +36,17 @@ resource "aws_security_group" "web-sg" {
     name = "web-sg"
     vpc_id = aws_vpc.sample-vpc.id
 
-    ingress = {
-        from_port = 443
-        to_port = 443
-        protocol = "tcp"
-        cidr_block = [aws_vpc.sample-vpc.cidr_block]
-    }
+    ingress = [ {
+      cidr_blocks = [ aws_vpc.sample-vpc.cidr_block ]
+      description = "security group for web"
+      from_port = 443
+      ipv6_cidr_blocks = [  ]
+      prefix_list_ids = [ ]
+      protocol = "tcp"
+      security_groups = [ "" ]
+      self = false
+      to_port = 443
+    } ]
 }
 
 #security group for db (mysql)
@@ -49,12 +54,17 @@ resource "aws_security_group" "db-sg" {
     name = "db-sg"
     vpc_id = aws_vpc.sample-vpc.id
 
-    ingress = {
-        from_port = 1433
-        to_port = 1433
-        protocol = "tcp"
-        cidr_block = [aws_vpc.sample-vpc.cidr_block]
-    }
+    ingress = [ {
+      cidr_blocks = [ aws_vpc.sample-vpc.cidr_block ]
+      description = "securoty group for db"
+      from_port = 1433
+      ipv6_cidr_blocks = [  ]
+      prefix_list_ids = [  ]
+      protocol = "tcp"
+      security_groups = [ "" ]
+      self = false
+      to_port = 1433
+    } ]
 }
 
 resource "aws_security_group" "ingress-sg" {
@@ -62,10 +72,15 @@ resource "aws_security_group" "ingress-sg" {
     vpc_id = aws_vpc.sample-vpc.id
 
     ingress = [ {
-        from_port = 0
-        to_port = 0
-        protocol = "any"
-        cidr_block = [aws_vpc.sample-vpc.cidr_block]
+      cidr_blocks = [ aws_vpc.sample-vpc.cidr_block ]
+      description = "ingress security group"
+      from_port = 0
+      ipv6_cidr_blocks = [  ]
+      prefix_list_ids = [  ]
+      protocol = "any"
+      security_groups = [ "" ]
+      self = false
+      to_port = 0
     } ]
 }
 
@@ -83,10 +98,22 @@ resource "aws_nat_gateway" "private-nat" {
 resource "aws_route_table" "public" {
     vpc_id = aws_vpc.sample-vpc.id
 
-    route =  {
-        cidr_block = "0.0.0.0/0"
-        gateway_id = aws_nat_gateway.public-nat.id
-    }
+    route = [ {
+      carrier_gateway_id = ""
+      cidr_block = "0.0.0.0/0"
+      core_network_arn = ""
+      destination_prefix_list_id = ""
+      egress_only_gateway_id = ""
+      gateway_id = ""
+      instance_id = ""
+      ipv6_cidr_block = ""
+      local_gateway_id = ""
+      nat_gateway_id = aws_nat_gateway.public-nat.id
+      network_interface_id = ""
+      transit_gateway_id = ""
+      vpc_endpoint_id = ""
+      vpc_peering_connection_id = ""
+    } ]
 }
 
 #Route table association
