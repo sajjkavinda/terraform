@@ -57,6 +57,18 @@ resource "aws_security_group" "db-sg" {
     }
 }
 
+resource "aws_security_group" "ingress-sg" {
+    name = "ingress-sg"
+    vpc_id = aws_vpc.sample-vpc.id
+
+    ingress = [ {
+        from_port = 0
+        to_port = 0
+        protocol = "any"
+        cidr_block = [aws_vpc.sample-vpc.cidr_block]
+    } ]
+}
+
 #public nat gateway
 resource "aws_nat_gateway" "public-nat" {
     subnet_id = aws_subnet.public.id
